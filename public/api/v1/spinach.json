@@ -1,0 +1,29 @@
+{
+  "spinach": {
+    "mainElements": {
+      "calories": { "value": 23, "unit": "kcal" },
+      "water": { "value": 91, "unit": "g" },
+      "protein": { "value": 2.9, "unit": "g" },
+      "carbohydrates": { "value": 3.6, "unit": "g" },
+      "sugar": { "value": 0.4, "unit": "g" },
+      "fiber": { "value": 2.2, "unit": "g" },
+      "fat": { "value": 0.4, "unit": "g" }
+    },
+    "vitamins": {
+      "vitaminC": { "value": 28, "unit": "mg" },
+      "vitaminK": { "value": 483, "unit": "mcg" },
+      "vitaminB6": { "value": 0.2, "unit": "mg" },
+      "vitaminE": { "value": 2, "unit": "mg" },
+      "folate": { "value": 194, "unit": "mcg" }
+    },
+    "microelements": {
+      "potassium": { "value": 558, "unit": "mg" },
+      "magnesium": { "value": 79, "unit": "mg" },
+      "calcium": { "value": 99, "unit": "mg" },
+      "phosphorus": { "value": 49, "unit": "mg" },
+      "iron": { "value": 2.7, "unit": "mg" },
+      "zinc": { "value": 0.53, "unit": "mg" },
+      "manganese": { "value": 0.9, "unit": "mg" }
+    }
+  }
+}

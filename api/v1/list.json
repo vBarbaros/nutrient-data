@@ -1,0 +1,30 @@
+[
+  {
+    "name": "apple",
+    "path": "/api/v1/apple.json"
+  },
+  {
+    "name": "broccoli",
+    "path": "/api/v1/broccoli.json"
+  },
+  {
+    "name": "carrot",
+    "path": "/api/v1/carrot.json"
+  },
+  {
+    "name": "kale",
+    "path": "/api/v1/kale.json"
+  },
+  {
+    "name": "orange",
+    "path": "/api/v1/orange.json"
+  },
+  {
+    "name": "potato",
+    "path": "/api/v1/potato.json"
+  },
+  {
+    "name": "spinach",
+    "path": "/api/v1/spinach.json"
+  }
+]

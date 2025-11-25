@@ -5,110 +5,71 @@ A React-based data visualization and static REST API for nutrient and food infor
 ## Project Structure
 
 ```
-/data/source/          # Raw source data files (add your JSON here)
-  nutrients.json       # Array of nutrient objects
-  foods.json           # Array of food objects
-/api/v1/               # Generated API endpoints (static JSON)
-  /nutrients/          
-    list.json          # All nutrients
-    {id}.json          # Individual nutrient by ID
-  /foods/              
-    list.json          # All foods
-    {id}.json          # Individual food by ID
+/api/v1/data/          # Your source data (add JSON files here)
+  apple.json
+  banana.json
 /src/                  # React source code
   App.jsx
   main.jsx
   index.css
-/docs/                 # Built React app (committed to repo)
-generate-api.sh        # Script to generate API files
+/docs/                 # Built React app + API (committed to repo)
+  /api/v1/             # Generated API endpoints
+generate-api.sh        # Script to copy data to docs/api/v1
 ```
 
-## Local Development Setup
+## Local Development
 
 1. **Install dependencies:**
 ```bash
 npm install
 ```
 
-2. **Add your source data** to `/data/source/`:
+2. **Add your data** to `/api/v1/data/` directory as JSON files
 
-**nutrients.json** - Array of nutrient objects:
-```json
-[
-  {"id": 1, "name": "Vitamin A", "unit": "mcg"},
-  {"id": 2, "name": "Vitamin C", "unit": "mg"}
-]
-```
-
-**foods.json** - Array of food objects:
-```json
-[
-  {"id": 1, "name": "Apple", "calories": 95},
-  {"id": 2, "name": "Banana", "calories": 105}
-]
-```
-
-3. **Generate API files:**
-```bash
-./generate-api.sh
-```
-
-4. **Run development server:**
+3. **Run development server:**
 ```bash
 npm run dev
 ```
 
 Visit `http://localhost:5173` to view the app.
 
-## GitHub Pages Deployment
+## Deploy to GitHub Pages
 
 1. **Update `vite.config.js`** - Change `base` to match your repo name:
 ```javascript
 base: '/your-repo-name/',
 ```
 
-2. **Build the project:**
+2. **Build and generate API:**
 ```bash
 npm run build
-```
-
-3. **Generate and copy API files:**
-```bash
 ./generate-api.sh
 ```
 
-4. **Commit and push:**
+3. **Commit and push:**
 ```bash
 git add docs/
 git commit -m "Build for GitHub Pages"
 git push
 ```
 
-5. **Configure GitHub Pages:**
+4. **Configure GitHub Pages:**
 - Go to repo Settings → Pages
-- Set source to "Deploy from a branch"
-- Select "main" branch and "/docs" folder
+- Source: "Deploy from a branch"
+- Branch: "main", Folder: "/docs"
 - Save
 
-6. **Access your site:**
+5. **Access your site:**
 - Visualization: `https://yourusername.github.io/your-repo-name/`
-- API: `https://yourusername.github.io/your-repo-name/api/v1/nutrients/list.json`
+- API: `https://yourusername.github.io/your-repo-name/api/v1/apple.json`
 
-## API Endpoints
+## API Usage
 
-Once deployed, your API will be available at:
-
-- `GET /api/v1/nutrients/list.json` - List all nutrients
-- `GET /api/v1/nutrients/{id}.json` - Get specific nutrient
-- `GET /api/v1/foods/list.json` - List all foods
-- `GET /api/v1/foods/{id}.json` - Get specific food
-
-## Using the API in React Native
+All JSON files in `/api/v1/data/` are available as API endpoints:
 
 ```javascript
-const API_BASE = 'https://yourusername.github.io/your-repo-name/api/v1';
-
-fetch(`${API_BASE}/nutrients/list.json`)
+// Fetch apple data
+fetch('https://yourusername.github.io/your-repo-name/api/v1/apple.json')
   .then(res => res.json())
   .then(data => console.log(data));
 ```
@@ -116,11 +77,9 @@ fetch(`${API_BASE}/nutrients/list.json`)
 ## Requirements
 
 - Node.js & npm
-- `jq` command-line JSON processor (install: `brew install jq` on macOS)
 
 ## Scripts
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
-- `./generate-api.sh` - Generate API files from source data
+- `./generate-api.sh` - Copy data files to docs/api/v1
