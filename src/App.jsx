@@ -547,12 +547,30 @@ function App() {
                   </div>
                 ))}
               </div>
+
+              {itemData.sources && itemData.sources.length > 0 && (
+                <div className="facts-section">
+                  <div className="facts-label bold">Sources</div>
+                  {itemData.sources.map((source, idx) => (
+                    <div key={idx} className="facts-row">
+                      <a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}</a>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ) : (compareMode || combinedMode) ? (
             <p>Select items from the sidebar to {compareMode ? 'compare' : 'combine'}</p>
           ) : !error && <p>Loading...</p>}
         </main>
       </div>
+      
+      <footer>
+        <p className="disclaimer">
+          <strong>Disclaimer:</strong> This information is for educational purposes only and is not intended as medical or nutritional advice. Always consult with a qualified healthcare professional before making any dietary changes or if you have health concerns.
+        </p>
+        <p className="copyright">© 2025 vBarbaros. All rights reserved.</p>
+      </footer>
     </>
   )
 }

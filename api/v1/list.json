@@ -1,30 +1,23 @@
 [
-  {
-    "name": "apple",
-    "path": "/api/v1/apple.json"
-  },
-  {
-    "name": "broccoli",
-    "path": "/api/v1/broccoli.json"
-  },
-  {
-    "name": "carrot",
-    "path": "/api/v1/carrot.json"
-  },
-  {
-    "name": "kale",
-    "path": "/api/v1/kale.json"
-  },
-  {
-    "name": "orange",
-    "path": "/api/v1/orange.json"
-  },
-  {
-    "name": "potato",
-    "path": "/api/v1/potato.json"
-  },
-  {
-    "name": "spinach",
-    "path": "/api/v1/spinach.json"
-  }
+  {"name": "apple", "path": "/api/v1/apple.json"},
+  {"name": "blueberries", "path": "/api/v1/blueberries.json"},
+  {"name": "broccoli", "path": "/api/v1/broccoli.json"},
+  {"name": "cabbage", "path": "/api/v1/cabbage.json"},
+  {"name": "carrot", "path": "/api/v1/carrot.json"},
+  {"name": "clementines", "path": "/api/v1/clementines.json"},
+  {"name": "coconut", "path": "/api/v1/coconut.json"},
+  {"name": "coconut-butter", "path": "/api/v1/coconut-butter.json"},
+  {"name": "garlic", "path": "/api/v1/garlic.json"},
+  {"name": "kale", "path": "/api/v1/kale.json"},
+  {"name": "lime", "path": "/api/v1/lime.json"},
+  {"name": "noodles", "path": "/api/v1/noodles.json"},
+  {"name": "onion", "path": "/api/v1/onion.json"},
+  {"name": "orange", "path": "/api/v1/orange.json"},
+  {"name": "oranges", "path": "/api/v1/oranges.json"},
+  {"name": "pepper", "path": "/api/v1/pepper.json"},
+  {"name": "potato", "path": "/api/v1/potato.json"},
+  {"name": "rice", "path": "/api/v1/rice.json"},
+  {"name": "sauerkraut", "path": "/api/v1/sauerkraut.json"},
+  {"name": "spinach", "path": "/api/v1/spinach.json"},
+  {"name": "tofu", "path": "/api/v1/tofu.json"}
 ]
