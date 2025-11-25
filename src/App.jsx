@@ -15,14 +15,14 @@ function App() {
   const [dailyNeeds, setDailyNeeds] = useState(null)
 
   useEffect(() => {
-    fetch('/human-daily-needs.json')
+    fetch('./human-daily-needs.json')
       .then(res => res.json())
       .then(data => setDailyNeeds(data.dailyNeeds))
       .catch(err => console.error('Failed to load daily needs:', err))
   }, [])
 
   useEffect(() => {
-    fetch('/api/v1/list.json')
+    fetch('./api/v1/list.json')
       .then(res => res.json())
       .then(list => {
         const itemNames = list.map(item => item.name).sort()
@@ -38,7 +38,7 @@ function App() {
   useEffect(() => {
     if (!selected) return
     
-    fetch(`/api/v1/${selected}.json`)
+    fetch(`./api/v1/${selected}.json`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
@@ -62,7 +62,7 @@ function App() {
     } else {
       setCompareItems([...compareItems, item])
       setServingSizes({ ...servingSizes, [item]: 100 })
-      fetch(`/api/v1/${item}.json`)
+      fetch(`./api/v1/${item}.json`)
         .then(res => res.json())
         .then(data => {
           setCompareData(prev => ({ ...prev, [item]: data[item] }))
