@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [react()],
   base: '/nutrient-data/',
   build: {
-    outDir: 'dist'
+    outDir: 'docs'
   }
 })

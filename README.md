@@ -19,7 +19,7 @@ A React-based data visualization and static REST API for nutrient and food infor
   App.jsx
   main.jsx
   index.css
-/dist/                 # Built React app (generated)
+/docs/                 # Built React app (committed to repo)
 generate-api.sh        # Script to generate API files
 ```
 
@@ -72,26 +72,25 @@ base: '/your-repo-name/',
 npm run build
 ```
 
-3. **Copy API files to dist:**
+3. **Generate and copy API files:**
 ```bash
-cp -r api dist/
+./generate-api.sh
 ```
 
-4. **Deploy to GitHub Pages:**
-
-**Option A: Using gh-pages branch**
+4. **Commit and push:**
 ```bash
-npm install -g gh-pages
-gh-pages -d dist
+git add docs/
+git commit -m "Build for GitHub Pages"
+git push
 ```
 
-**Option B: Manual deployment**
-- Push `dist/` contents to `gh-pages` branch
+5. **Configure GitHub Pages:**
 - Go to repo Settings → Pages
-- Set source to `gh-pages` branch
+- Set source to "Deploy from a branch"
+- Select "main" branch and "/docs" folder
 - Save
 
-5. **Access your site:**
+6. **Access your site:**
 - Visualization: `https://yourusername.github.io/your-repo-name/`
 - API: `https://yourusername.github.io/your-repo-name/api/v1/nutrients/list.json`
 

@@ -34,4 +34,10 @@ if [ -f "$SOURCE_DIR/foods.json" ]; then
     echo "✓ Generated food API files"
 fi
 
+# Copy API to docs if it exists
+if [ -d "docs" ]; then
+    cp -r api docs/
+    echo "✓ Copied API to docs folder"
+fi
+
 echo "API generation complete!"
