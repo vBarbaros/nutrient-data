@@ -12,7 +12,6 @@
   {"name": "lime", "path": "/api/v1/lime.json"},
   {"name": "noodles", "path": "/api/v1/noodles.json"},
   {"name": "onion", "path": "/api/v1/onion.json"},
-  {"name": "orange", "path": "/api/v1/orange.json"},
   {"name": "oranges", "path": "/api/v1/oranges.json"},
   {"name": "pepper", "path": "/api/v1/pepper.json"},
   {"name": "potato", "path": "/api/v1/potato.json"},
