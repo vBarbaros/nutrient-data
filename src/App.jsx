@@ -13,6 +13,20 @@ function App() {
   const [compareData, setCompareData] = useState({})
   const [servingSizes, setServingSizes] = useState({})
   const [dailyNeeds, setDailyNeeds] = useState(null)
+  const [statement, setStatement] = useState('What\'s Really in Your Food?')
+  const [citation, setCitation] = useState('Loading...')
+
+  useEffect(() => {
+    Promise.all([
+      fetch('./statements.json').then(res => res.json()),
+      fetch('./citations.json').then(res => res.json())
+    ]).then(([statementsData, citationsData]) => {
+      const randomStatement = statementsData.statements[Math.floor(Math.random() * statementsData.statements.length)]
+      const randomCitation = citationsData.citations[Math.floor(Math.random() * citationsData.citations.length)]
+      setStatement(randomStatement)
+      setCitation(randomCitation)
+    }).catch(err => console.error('Failed to load statements/citations:', err))
+  }, [])
 
   useEffect(() => {
     fetch('./human-daily-needs.json')
@@ -170,7 +184,8 @@ function App() {
   return (
     <>
       <header>
-        <h1>Nutrient Data Visualization</h1>
+        <h1>{statement}</h1>
+        <p className="citation">{citation}</p>
       </header>
       
       <div className="container">

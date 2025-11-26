@@ -21,4 +21,16 @@ if [ -f "api/human-daily-needs.json" ]; then
     echo "✓ Copied human-daily-needs.json"
 fi
 
+if [ -f "api/statements.json" ]; then
+    cp api/statements.json public/
+    cp api/statements.json docs/
+    echo "✓ Copied statements.json"
+fi
+
+if [ -f "api/citations.json" ]; then
+    cp api/citations.json public/
+    cp api/citations.json docs/
+    echo "✓ Copied citations.json"
+fi
+
 echo "API generation complete!"
