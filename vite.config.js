@@ -6,5 +6,6 @@ export default defineConfig({
   base: '/nutrient-data/',
   build: {
     outDir: 'docs'
-  }
+  },
+  publicDir: 'api'
 })

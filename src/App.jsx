@@ -15,7 +15,7 @@ function App() {
   const [dailyNeeds, setDailyNeeds] = useState(null)
 
   useEffect(() => {
-    fetch('./human-daily-needs.json')
+    fetch('./api/human-daily-needs.json')
       .then(res => res.json())
       .then(data => setDailyNeeds(data.dailyNeeds))
       .catch(err => console.error('Failed to load daily needs:', err))
