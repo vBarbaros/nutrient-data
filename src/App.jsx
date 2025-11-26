@@ -45,13 +45,13 @@ function App() {
       .catch(err => console.error('Failed to load items list:', err))
   }, [])
 
-  const filteredItems = items.filter(item => 
+  const filteredItems = items.filter(item =>
     item.toLowerCase().includes(search.toLowerCase())
   )
 
   useEffect(() => {
     if (!selected) return
-    
+
     fetch(`./v1/${selected}.json`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -187,7 +187,7 @@ function App() {
         <h1>{statement}</h1>
         <p className="citation">{citation}</p>
       </header>
-      
+
       <div className="container">
         <aside className="sidebar">
           <div className="search-bar">
@@ -211,7 +211,7 @@ function App() {
             ))}
           </div>
         </aside>
-        
+
         <main>
           <div className="compare-controls">
             <button onClick={() => {
@@ -236,7 +236,7 @@ function App() {
                 setShowDailyNeeds(false)
               }
             }}>
-              {combinedMode ? 'Exit Combined' : 'Combined'}
+              {combinedMode ? 'Exit Combine' : 'Combine'}
             </button>
             {combinedMode && (
               <div className="toggle-container">
@@ -257,7 +257,7 @@ function App() {
           </div>
 
           {error && <p style={{color: 'red'}}>Error: {error}</p>}
-          
+
           {combinedMode && compareItems.length > 0 ? (
             <div className="combined-view">
               <div className="serving-sizes">
@@ -284,7 +284,7 @@ function App() {
                     <h1>Nutrition Facts</h1>
                     <div className="serving-size">Combined: {compareItems.join(', ')}</div>
                   </div>
-                  
+
                   <div className="facts-section thick-border">
                     <div className="facts-row bold">
                       <span>Calories</span>
@@ -294,7 +294,7 @@ function App() {
 
                   <div className="facts-section">
                     <div className="facts-label">Amount per serving</div>
-                    
+
                     <div className="facts-row">
                       <span>Water</span>
                       <span>{renderValueWithDelta(combinedData.mainElements.water.value, dailyNeeds?.mainElements.water.value, combinedData.mainElements.water.unit)}</span>
@@ -506,7 +506,7 @@ function App() {
                 <h1>Nutrition Facts</h1>
                 <div className="serving-size">Serving size 100g</div>
               </div>
-              
+
               <div className="facts-section thick-border">
                 <div className="facts-row bold">
                   <span>Calories</span>
@@ -516,7 +516,7 @@ function App() {
 
               <div className="facts-section">
                 <div className="facts-label">Amount per serving</div>
-                
+
                 <div className="facts-row">
                   <span>Water</span>
                   <span>{itemData.mainElements.water.value} {itemData.mainElements.water.unit}</span>
@@ -579,7 +579,7 @@ function App() {
           ) : !error && <p>Loading...</p>}
         </main>
       </div>
-      
+
       <footer>
         <p className="disclaimer">
           <strong>Disclaimer:</strong> This information is for educational purposes only and is not intended as medical or nutritional advice. Always consult with a qualified healthcare professional before making any dietary changes or if you have health concerns.
