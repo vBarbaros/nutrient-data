@@ -15,14 +15,14 @@ function App() {
   const [dailyNeeds, setDailyNeeds] = useState(null)
 
   useEffect(() => {
-    fetch('./api/human-daily-needs.json')
+    fetch('./human-daily-needs.json')
       .then(res => res.json())
       .then(data => setDailyNeeds(data.dailyNeeds))
       .catch(err => console.error('Failed to load daily needs:', err))
   }, [])
 
   useEffect(() => {
-    fetch('./api/v1/list.json')
+    fetch('./v1/list.json')
       .then(res => res.json())
       .then(list => {
         const itemNames = list.map(item => item.name).sort()
@@ -38,7 +38,7 @@ function App() {
   useEffect(() => {
     if (!selected) return
     
-    fetch(`./api/v1/${selected}.json`)
+    fetch(`./v1/${selected}.json`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
@@ -62,7 +62,7 @@ function App() {
     } else {
       setCompareItems([...compareItems, item])
       setServingSizes({ ...servingSizes, [item]: 100 })
-      fetch(`./api/v1/${item}.json`)
+      fetch(`./v1/${item}.json`)
         .then(res => res.json())
         .then(data => {
           setCompareData(prev => ({ ...prev, [item]: data[item] }))
@@ -148,15 +148,15 @@ function App() {
 
   const renderValueWithDelta = (current, dailyValue, unit) => {
     if (!showDailyNeeds || !dailyValue) {
-      return `${current}${unit}`
+      return `${current} ${unit}`
     }
 
     const delta = getDelta(current, dailyValue)
-    if (!delta) return `${current}${unit}`
+    if (!delta) return `${current} ${unit}`
 
     return (
       <span className={delta.isOver ? 'over-daily' : 'under-daily'}>
-        {current}{unit}
+        {current} {unit}
         <span className="delta">
           {delta.isOver ? '↑' : '↓'} ({delta.percentage}%)
         </span>
@@ -294,7 +294,7 @@ function App() {
                     </div>
                     <div className="facts-row indent">
                       <span>Sugar</span>
-                      <span>{combinedData.mainElements.sugar.value}{combinedData.mainElements.sugar.unit}</span>
+                      <span>{combinedData.mainElements.sugar.value} {combinedData.mainElements.sugar.unit}</span>
                     </div>
                     <div className="facts-row indent">
                       <span>Fiber</span>
@@ -504,27 +504,27 @@ function App() {
                 
                 <div className="facts-row">
                   <span>Water</span>
-                  <span>{itemData.mainElements.water.value}{itemData.mainElements.water.unit}</span>
+                  <span>{itemData.mainElements.water.value} {itemData.mainElements.water.unit}</span>
                 </div>
                 <div className="facts-row">
                   <span>Protein</span>
-                  <span>{itemData.mainElements.protein.value}{itemData.mainElements.protein.unit}</span>
+                  <span>{itemData.mainElements.protein.value} {itemData.mainElements.protein.unit}</span>
                 </div>
                 <div className="facts-row">
                   <span>Carbohydrates</span>
-                  <span>{itemData.mainElements.carbohydrates.value}{itemData.mainElements.carbohydrates.unit}</span>
+                  <span>{itemData.mainElements.carbohydrates.value} {itemData.mainElements.carbohydrates.unit}</span>
                 </div>
                 <div className="facts-row indent">
                   <span>Sugar</span>
-                  <span>{itemData.mainElements.sugar.value}{itemData.mainElements.sugar.unit}</span>
+                  <span>{itemData.mainElements.sugar.value} {itemData.mainElements.sugar.unit}</span>
                 </div>
                 <div className="facts-row indent">
                   <span>Fiber</span>
-                  <span>{itemData.mainElements.fiber.value}{itemData.mainElements.fiber.unit}</span>
+                  <span>{itemData.mainElements.fiber.value} {itemData.mainElements.fiber.unit}</span>
                 </div>
                 <div className="facts-row">
                   <span>Fat</span>
-                  <span>{itemData.mainElements.fat.value}{itemData.mainElements.fat.unit}</span>
+                  <span>{itemData.mainElements.fat.value} {itemData.mainElements.fat.unit}</span>
                 </div>
               </div>
 
@@ -533,7 +533,7 @@ function App() {
                 {Object.entries(itemData.vitamins).map(([key, val]) => (
                   <div key={key} className="facts-row">
                     <span>{key}</span>
-                    <span>{val.value !== null ? `${val.value}${val.unit}` : 'N/A'}</span>
+                    <span>{val.value !== null ? `${val.value} ${val.unit}` : 'N/A'}</span>
                   </div>
                 ))}
               </div>
@@ -543,7 +543,7 @@ function App() {
                 {Object.entries(itemData.microelements).map(([key, val]) => (
                   <div key={key} className="facts-row">
                     <span>{key}</span>
-                    <span>{val.value !== null ? `${val.value}${val.unit}` : 'N/A'}</span>
+                    <span>{val.value !== null ? `${val.value} ${val.unit}` : 'N/A'}</span>
                   </div>
                 ))}
               </div>
