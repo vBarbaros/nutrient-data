@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import html2canvas from 'html2canvas'
 
 function App() {
   const [items, setItems] = useState([])
@@ -8,6 +9,9 @@ function App() {
   const [error, setError] = useState(null)
   const [compareMode, setCompareMode] = useState(false)
   const [combinedMode, setCombinedMode] = useState(false)
+  const [recipeMode, setRecipeMode] = useState(false)
+  const [recipeSteps, setRecipeSteps] = useState('')
+  const [recipeName, setRecipeName] = useState('')
   const [showDailyNeeds, setShowDailyNeeds] = useState(false)
   const [compareItems, setCompareItems] = useState([])
   const [compareData, setCompareData] = useState({})
@@ -15,6 +19,7 @@ function App() {
   const [dailyNeeds, setDailyNeeds] = useState(null)
   const [statement, setStatement] = useState('What\'s Really in Your Food?')
   const [citation, setCitation] = useState('Loading...')
+  const recipeRef = useRef(null)
 
   useEffect(() => {
     Promise.all([
@@ -178,6 +183,70 @@ function App() {
     )
   }
 
+  const generateRecipeImage = async (action) => {
+    const el = recipeRef.current
+    if (!el) return
+    
+    // Hide buttons
+    const buttons = el.querySelector('.recipe-actions')
+    if (buttons) buttons.style.display = 'none'
+    
+    // Create wrapper with blue margin
+    const wrapper = document.createElement('div')
+    wrapper.style.cssText = 'background:#3498db;padding:1.5rem;border-radius:12px;display:inline-block;'
+    
+    // Create inner container
+    const inner = document.createElement('div')
+    inner.style.cssText = 'background:#f5f5f5;padding:1.5rem;border-radius:8px;'
+    
+    // Clone content
+    const clone = el.cloneNode(true)
+    clone.querySelector('.recipe-actions')?.remove()
+    inner.appendChild(clone)
+    wrapper.appendChild(inner)
+    
+    // Add footer
+    const footer = document.createElement('div')
+    footer.style.cssText = 'text-align:center;color:white;font-size:0.85rem;padding:1rem 0 0.25rem;'
+    footer.textContent = '© 2026 Nutrient Data by vBarbaros. All rights reserved.'
+    wrapper.appendChild(footer)
+    
+    // Render off-screen
+    wrapper.style.position = 'absolute'
+    wrapper.style.left = '-9999px'
+    document.body.appendChild(wrapper)
+    
+    const canvas = await html2canvas(wrapper, { backgroundColor: '#3498db', scale: 2 })
+    
+    document.body.removeChild(wrapper)
+    if (buttons) buttons.style.display = ''
+    
+    canvas.toBlob(async (blob) => {
+      if (action === 'download') {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${recipeName || 'recipe'}.png`
+        a.click()
+        URL.revokeObjectURL(url)
+      } else if (navigator.share && navigator.canShare({ files: [new File([blob], 'recipe.png', { type: 'image/png' })] })) {
+        try {
+          await navigator.share({
+            files: [new File([blob], `${recipeName || 'recipe'}.png`, { type: 'image/png' })],
+            title: recipeName || 'My Recipe'
+          })
+        } catch (e) { console.log('Share cancelled') }
+      } else {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${recipeName || 'recipe'}.png`
+        a.click()
+        URL.revokeObjectURL(url)
+      }
+    }, 'image/png')
+  }
+
   const itemData = data?.[selected]
   const combinedData = getCombinedData()
 
@@ -202,10 +271,10 @@ function App() {
             {filteredItems.map(item => (
               <div
                 key={item}
-                className={`sidebar-item ${!compareMode && !combinedMode && selected === item ? 'active' : ''} ${compareItems.includes(item) ? 'compare-selected' : ''}`}
-                onClick={() => (compareMode || combinedMode) ? toggleCompareItem(item) : setSelected(item)}
+                className={`sidebar-item ${!compareMode && !combinedMode && !recipeMode && selected === item ? 'active' : ''} ${compareItems.includes(item) ? 'compare-selected' : ''}`}
+                onClick={() => (compareMode || combinedMode || recipeMode) ? toggleCompareItem(item) : setSelected(item)}
               >
-                {(compareMode || combinedMode) && <input type="checkbox" checked={compareItems.includes(item)} readOnly />}
+                {(compareMode || combinedMode || recipeMode) && <input type="checkbox" checked={compareItems.includes(item)} readOnly />}
                 {item.charAt(0).toUpperCase() + item.slice(1)}
               </div>
             ))}
@@ -217,6 +286,7 @@ function App() {
             <button onClick={() => {
               setCompareMode(!compareMode)
               setCombinedMode(false)
+              setRecipeMode(false)
               setShowDailyNeeds(false)
               if (compareMode) {
                 setCompareItems([])
@@ -229,6 +299,7 @@ function App() {
             <button onClick={() => {
               setCombinedMode(!combinedMode)
               setCompareMode(false)
+              setRecipeMode(false)
               if (combinedMode) {
                 setCompareItems([])
                 setCompareData({})
@@ -238,7 +309,22 @@ function App() {
             }}>
               {combinedMode ? 'Exit Combine' : 'Combine'}
             </button>
-            {combinedMode && (
+            <button onClick={() => {
+              setRecipeMode(!recipeMode)
+              setCompareMode(false)
+              setCombinedMode(false)
+              setShowDailyNeeds(false)
+              if (recipeMode) {
+                setCompareItems([])
+                setCompareData({})
+                setServingSizes({})
+                setRecipeSteps('')
+                setRecipeName('')
+              }
+            }}>
+              {recipeMode ? 'Exit Recipe' : 'Build Recipe'}
+            </button>
+            {(combinedMode || recipeMode) && (
               <div className="toggle-container">
                 <span className="toggle-label">Show Daily Needs</span>
                 <label className="toggle-switch">
@@ -251,14 +337,102 @@ function App() {
                 </label>
               </div>
             )}
-            {(compareMode || combinedMode) && compareItems.length > 0 && (
+            {(compareMode || combinedMode || recipeMode) && compareItems.length > 0 && (
               <span>{compareItems.length} items selected</span>
             )}
           </div>
 
           {error && <p style={{color: 'red'}}>Error: {error}</p>}
 
-          {combinedMode && compareItems.length > 0 ? (
+          {recipeMode && compareItems.length > 0 ? (
+            <div className="recipe-view" ref={recipeRef}>
+              <div className="recipe-header">
+                <input
+                  type="text"
+                  className="recipe-name-input"
+                  placeholder="Recipe Name"
+                  value={recipeName}
+                  onChange={(e) => setRecipeName(e.target.value)}
+                />
+                <div className="recipe-actions">
+                  <button onClick={() => generateRecipeImage('download')}>Download</button>
+                  <button onClick={() => generateRecipeImage('share')}>Share</button>
+                </div>
+              </div>
+              <div className="recipe-content">
+                <div className="recipe-left">
+                  <div className="serving-sizes">
+                    <h3>Ingredients</h3>
+                    {compareItems.map(item => (
+                      <div key={item} className="serving-control">
+                        <label>{item.charAt(0).toUpperCase() + item.slice(1)}</label>
+                        <div className="size-controls">
+                          <input
+                            type="number"
+                            value={servingSizes[item] || 100}
+                            onChange={(e) => updateServingSize(item, parseFloat(e.target.value) || 0)}
+                            step="10"
+                          />
+                          <span className="unit">g</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="recipe-steps">
+                    <h3>Instructions</h3>
+                    <textarea
+                      placeholder="Describe your recipe steps..."
+                      value={recipeSteps}
+                      onChange={(e) => setRecipeSteps(e.target.value)}
+                    />
+                  </div>
+                </div>
+                {combinedData && (
+                  <div className="nutrition-facts">
+                    <div className="facts-header">
+                      <h1>Nutrition Facts</h1>
+                      <div className="serving-size">Total Recipe</div>
+                    </div>
+                    <div className="facts-section thick-border">
+                      <div className="facts-row bold">
+                        <span>Calories</span>
+                        <span>{renderValueWithDelta(combinedData.mainElements.calories.value, dailyNeeds?.mainElements.calories.value, '')}</span>
+                      </div>
+                    </div>
+                    <div className="facts-section">
+                      <div className="facts-label">Amount per serving</div>
+                      <div className="facts-row"><span>Water</span><span>{renderValueWithDelta(combinedData.mainElements.water.value, dailyNeeds?.mainElements.water.value, combinedData.mainElements.water.unit)}</span></div>
+                      <div className="facts-row"><span>Protein</span><span>{renderValueWithDelta(combinedData.mainElements.protein.value, dailyNeeds?.mainElements.protein.value, combinedData.mainElements.protein.unit)}</span></div>
+                      <div className="facts-row"><span>Carbohydrates</span><span>{renderValueWithDelta(combinedData.mainElements.carbohydrates.value, dailyNeeds?.mainElements.carbohydrates.value, combinedData.mainElements.carbohydrates.unit)}</span></div>
+                      <div className="facts-row indent"><span>Sugar</span><span>{combinedData.mainElements.sugar.value} {combinedData.mainElements.sugar.unit}</span></div>
+                      <div className="facts-row indent"><span>Fiber</span><span>{renderValueWithDelta(combinedData.mainElements.fiber.value, dailyNeeds?.mainElements.fiber.value, combinedData.mainElements.fiber.unit)}</span></div>
+                      <div className="facts-row"><span>Fat</span><span>{renderValueWithDelta(combinedData.mainElements.fat.value, dailyNeeds?.mainElements.fat.value, combinedData.mainElements.fat.unit)}</span></div>
+                    </div>
+                    <div className="facts-section thick-border">
+                      <div className="facts-label bold">Vitamins</div>
+                      <div className="facts-row"><span>Vitamin C</span><span>{renderValueWithDelta(combinedData.vitamins.vitaminC.value, dailyNeeds?.vitamins.vitaminC.value, combinedData.vitamins.vitaminC.unit)}</span></div>
+                      <div className="facts-row"><span>Vitamin K</span><span>{renderValueWithDelta(combinedData.vitamins.vitaminK.value, dailyNeeds?.vitamins.vitaminK.value, combinedData.vitamins.vitaminK.unit)}</span></div>
+                      <div className="facts-row"><span>Vitamin B6</span><span>{renderValueWithDelta(combinedData.vitamins.vitaminB6.value, dailyNeeds?.vitamins.vitaminB6.value, combinedData.vitamins.vitaminB6.unit)}</span></div>
+                      <div className="facts-row"><span>Vitamin E</span><span>{renderValueWithDelta(combinedData.vitamins.vitaminE.value, dailyNeeds?.vitamins.vitaminE.value, combinedData.vitamins.vitaminE.unit)}</span></div>
+                      <div className="facts-row"><span>Folate</span><span>{renderValueWithDelta(combinedData.vitamins.folate.value, dailyNeeds?.vitamins.folate.value, combinedData.vitamins.folate.unit)}</span></div>
+                    </div>
+                    <div className="facts-section">
+                      <div className="facts-label bold">Minerals</div>
+                      <div className="facts-row"><span>Potassium</span><span>{renderValueWithDelta(combinedData.microelements.potassium.value, dailyNeeds?.microelements.potassium.value, combinedData.microelements.potassium.unit)}</span></div>
+                      <div className="facts-row"><span>Magnesium</span><span>{renderValueWithDelta(combinedData.microelements.magnesium.value, dailyNeeds?.microelements.magnesium.value, combinedData.microelements.magnesium.unit)}</span></div>
+                      <div className="facts-row"><span>Calcium</span><span>{renderValueWithDelta(combinedData.microelements.calcium.value, dailyNeeds?.microelements.calcium.value, combinedData.microelements.calcium.unit)}</span></div>
+                      <div className="facts-row"><span>Phosphorus</span><span>{renderValueWithDelta(combinedData.microelements.phosphorus.value, dailyNeeds?.microelements.phosphorus.value, combinedData.microelements.phosphorus.unit)}</span></div>
+                      <div className="facts-row"><span>Iron</span><span>{renderValueWithDelta(combinedData.microelements.iron.value, dailyNeeds?.microelements.iron.value, combinedData.microelements.iron.unit)}</span></div>
+                      <div className="facts-row"><span>Zinc</span><span>{renderValueWithDelta(combinedData.microelements.zinc.value, dailyNeeds?.microelements.zinc.value, combinedData.microelements.zinc.unit)}</span></div>
+                      <div className="facts-row"><span>Manganese</span><span>{renderValueWithDelta(combinedData.microelements.manganese.value, dailyNeeds?.microelements.manganese.value, combinedData.microelements.manganese.unit)}</span></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : recipeMode ? (
+            <p>Select ingredients from the sidebar to build your recipe</p>
+          ) : combinedMode && compareItems.length > 0 ? (
             <div className="combined-view">
               <div className="serving-sizes">
                 <h3>Serving Sizes (g)</h3>
@@ -574,8 +748,8 @@ function App() {
                 </div>
               )}
             </div>
-          ) : (compareMode || combinedMode) ? (
-            <p>Select items from the sidebar to {compareMode ? 'compare' : 'combine'}</p>
+          ) : (compareMode || combinedMode || recipeMode) ? (
+            <p>Select items from the sidebar to {compareMode ? 'compare' : combinedMode ? 'combine' : 'add to recipe'}</p>
           ) : !error && <p>Loading...</p>}
         </main>
       </div>
