@@ -187,6 +187,9 @@ function App() {
     )
   }
 
+  const [showShareMenu, setShowShareMenu] = useState(false)
+  const [shareImageUrl, setShareImageUrl] = useState(null)
+
   const generateRecipeImage = async (action) => {
     const el = recipeRef.current
     if (!el) return
@@ -233,22 +236,35 @@ function App() {
         a.download = `${recipeName || 'recipe'}.png`
         a.click()
         URL.revokeObjectURL(url)
-      } else if (navigator.share && navigator.canShare({ files: [new File([blob], 'recipe.png', { type: 'image/png' })] })) {
-        try {
-          await navigator.share({
-            files: [new File([blob], `${recipeName || 'recipe'}.png`, { type: 'image/png' })],
-            title: recipeName || 'My Recipe'
-          })
-        } catch (e) { console.log('Share cancelled') }
-      } else {
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `${recipeName || 'recipe'}.png`
-        a.click()
-        URL.revokeObjectURL(url)
+      } else if (action === 'share') {
+        if (navigator.share && navigator.canShare({ files: [new File([blob], 'recipe.png', { type: 'image/png' })] })) {
+          try {
+            await navigator.share({
+              files: [new File([blob], `${recipeName || 'recipe'}.png`, { type: 'image/png' })],
+              title: recipeName || 'My Recipe'
+            })
+          } catch (e) { console.log('Share cancelled') }
+        } else {
+          const url = URL.createObjectURL(blob)
+          setShareImageUrl(url)
+          setShowShareMenu(true)
+        }
       }
     }, 'image/png')
+  }
+
+  const shareToSocial = (platform) => {
+    const text = encodeURIComponent(`Check out my recipe: ${recipeName || 'My Recipe'}`)
+    const pageUrl = encodeURIComponent(window.location.href)
+    
+    const urls = {
+      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${pageUrl}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${text}`,
+      pinterest: `https://pinterest.com/pin/create/button/?url=${pageUrl}&description=${text}`
+    }
+    
+    window.open(urls[platform], '_blank', 'width=600,height=400')
+    setShowShareMenu(false)
   }
 
   const itemData = data?.[selected]
@@ -367,6 +383,15 @@ function App() {
                 <div className="recipe-actions">
                   <button onClick={() => generateRecipeImage('download')}>Download</button>
                   <button onClick={() => generateRecipeImage('share')}>Share</button>
+                  {showShareMenu && (
+                    <div className="share-menu">
+                      <button onClick={() => shareToSocial('twitter')}>𝕏 Twitter</button>
+                      <button onClick={() => shareToSocial('facebook')}>Facebook</button>
+                      <button onClick={() => shareToSocial('pinterest')}>Pinterest</button>
+                      {shareImageUrl && <a href={shareImageUrl} download={`${recipeName || 'recipe'}.png`}>Save Image</a>}
+                      <button onClick={() => setShowShareMenu(false)}>Cancel</button>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="recipe-content">

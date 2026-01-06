@@ -515,6 +515,7 @@ footer .copyright {
 .recipe-actions {
   display: flex;
   gap: 0.5rem;
+  position: relative;
 }
 
 .recipe-actions button {
@@ -529,6 +530,44 @@ footer .copyright {
 
 .recipe-actions button:hover {
   background: #2980b9;
+}
+
+.share-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  margin-top: 0.25rem;
+}
+
+.share-menu button,
+.share-menu a {
+  padding: 0.5rem 1rem;
+  background: white;
+  color: #333;
+  border: none;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: left;
+  text-decoration: none;
+}
+
+.share-menu button:hover,
+.share-menu a:hover {
+  background: #f5f5f5;
+}
+
+.share-menu button:last-child {
+  border-bottom: none;
+  color: #e74c3c;
 }
 
 .recipe-content {
@@ -570,4 +609,220 @@ footer .copyright {
 .recipe-steps textarea:focus {
   outline: none;
   border-color: #3498db;
+}
+
+
+/* Responsive Design */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  main {
+    padding: 1rem;
+  }
+  
+  .compare-controls {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .compare-controls button {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .toggle-label {
+    font-size: 0.8rem;
+  }
+  
+  .combined-view,
+  .recipe-content {
+    flex-direction: column;
+  }
+  
+  .serving-sizes {
+    min-width: 100%;
+  }
+  
+  .nutrition-facts {
+    max-width: 100%;
+  }
+  
+  .recipe-header {
+    flex-wrap: wrap;
+  }
+  
+  .recipe-name-input {
+    width: 100%;
+    flex: none;
+  }
+  
+  .recipe-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .facts-header h1 {
+    font-size: 2rem;
+  }
+  
+  footer {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Mobile phones (480px and below) */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.1rem;
+  }
+  
+  header .citation {
+    font-size: 0.75rem;
+  }
+  
+  .sidebar {
+    max-height: 35vh;
+  }
+  
+  .search-bar {
+    padding: 0.75rem;
+  }
+  
+  .sidebar-item {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  main {
+    padding: 0.75rem;
+  }
+  
+  .compare-controls {
+    gap: 0.4rem;
+  }
+  
+  .compare-controls button {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .toggle-container {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .serving-sizes {
+    padding: 1rem;
+  }
+  
+  .serving-control {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .size-controls input {
+    width: 70px;
+  }
+  
+  .recipe-name-input {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+  
+  .recipe-actions button {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .recipe-steps {
+    padding: 1rem;
+  }
+  
+  .recipe-steps textarea {
+    min-height: 120px;
+  }
+  
+  .facts-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .facts-row {
+    font-size: 0.85rem;
+  }
+  
+  .compare-table {
+    padding: 0.5rem;
+  }
+  
+  .compare-table th,
+  .compare-table td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  footer .disclaimer {
+    font-size: 0.65rem;
+  }
+}
+
+/* Large phones landscape / small tablets */
+@media (min-width: 481px) and (max-width: 768px) and (orientation: landscape) {
+  .sidebar {
+    max-height: 30vh;
+  }
+  
+  .combined-view,
+  .recipe-content {
+    flex-direction: row;
+  }
+  
+  .serving-sizes {
+    min-width: 250px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .sidebar-item {
+    padding: 1rem;
+    min-height: 48px;
+  }
+  
+  .compare-controls button,
+  .recipe-actions button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .search-bar input,
+  .search-bar select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  
+  .size-controls input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  
+  .recipe-name-input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  
+  .recipe-steps textarea {
+    font-size: 16px;
+  }
 }
