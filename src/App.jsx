@@ -584,7 +584,7 @@ function App() {
         <p className="disclaimer">
           <strong>Disclaimer:</strong> This information is for educational purposes only and is not intended as medical or nutritional advice. Always consult with a qualified healthcare professional before making any dietary changes or if you have health concerns.
         </p>
-        <p className="copyright">© 2025 vBarbaros. All rights reserved.</p>
+        <p className="copyright">© 2026 vBarbaros. All rights reserved.</p>
       </footer>
     </>
   )
