@@ -19,6 +19,8 @@ function App() {
   const [dailyNeeds, setDailyNeeds] = useState(null)
   const [statement, setStatement] = useState('What\'s Really in Your Food?')
   const [citation, setCitation] = useState('Loading...')
+  const [category, setCategory] = useState('all')
+  const [categories, setCategories] = useState([])
   const recipeRef = useRef(null)
 
   useEffect(() => {
@@ -44,14 +46,16 @@ function App() {
     fetch('./v1/list.json')
       .then(res => res.json())
       .then(list => {
-        const itemNames = list.map(item => item.name).sort()
-        setItems(itemNames)
+        setItems(list.sort((a, b) => a.name.localeCompare(b.name)))
+        const cats = [...new Set(list.map(item => item.category))].sort()
+        setCategories(cats)
       })
       .catch(err => console.error('Failed to load items list:', err))
   }, [])
 
   const filteredItems = items.filter(item =>
-    item.toLowerCase().includes(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase()) &&
+    (category === 'all' || item.category === category)
   )
 
   useEffect(() => {
@@ -266,16 +270,22 @@ function App() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            <select value={category} onChange={(e) => setCategory(e.target.value)}>
+              <option value="all">All Categories</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+              ))}
+            </select>
           </div>
           <div className="sidebar-items">
             {filteredItems.map(item => (
               <div
-                key={item}
-                className={`sidebar-item ${!compareMode && !combinedMode && !recipeMode && selected === item ? 'active' : ''} ${compareItems.includes(item) ? 'compare-selected' : ''}`}
-                onClick={() => (compareMode || combinedMode || recipeMode) ? toggleCompareItem(item) : setSelected(item)}
+                key={item.name}
+                className={`sidebar-item ${!compareMode && !combinedMode && !recipeMode && selected === item.name ? 'active' : ''} ${compareItems.includes(item.name) ? 'compare-selected' : ''}`}
+                onClick={() => (compareMode || combinedMode || recipeMode) ? toggleCompareItem(item.name) : setSelected(item.name)}
               >
-                {(compareMode || combinedMode || recipeMode) && <input type="checkbox" checked={compareItems.includes(item)} readOnly />}
-                {item.charAt(0).toUpperCase() + item.slice(1)}
+                {(compareMode || combinedMode || recipeMode) && <input type="checkbox" checked={compareItems.includes(item.name)} readOnly />}
+                {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
               </div>
             ))}
           </div>

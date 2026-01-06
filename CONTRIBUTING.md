@@ -86,10 +86,12 @@ The app is a single-page React application with a static JSON API, deployed to G
 ### List Index (`/api/v1/list.json`)
 ```json
 [
-  { "name": "apple" },
-  { "name": "banana" }
+  { "name": "apple", "category": "fruits" },
+  { "name": "broccoli", "category": "vegetables" }
 ]
 ```
+
+Categories: `fruits`, `vegetables`, `grains`, `legumes`, `fermented`, `other`
 
 ## Adding New Food Data
 
